@@ -1,0 +1,7 @@
+There are two types or organisms: tortoises and hares.
+
+Tortoises don't move much, but they are sneaky dangerous. They have a
+"kill" function that will remove a hare if there is one adjacent to them.
+
+Hares move much more quickly, and they breed like crazy. However, they
+don't have a "kill" function.
