@@ -18,28 +18,20 @@ class OrgWorld : public emp::World<Organism> {
     ~OrgWorld() {
     }
 
-
-
     void Update() {
         emp::World<Organism>::Update();
-        std::cout << "# orgs: " << GetNumOrgs() << std::endl;
+
+        std::cout << "# orgs at beginning of update: " << GetNumOrgs() << std::endl;
         emp::vector<size_t> processSchedule =
             emp::GetPermutation(random, GetSize());
         for (int i : processSchedule) {
             if (!pop[i] || !IsOccupied(i)) {
                 continue;
             }
-
-            // Check if there are neighboring orgs at the org's position
-            //bool doesOrgHaveCompany = false;
-            /*if (GetValidNeighborOrgIDs(i).size() > 0) {
-                doesOrgHaveCompany = true;
-            }*/
-            pop[i]->Process(/*doesOrgHaveCompany*/);
-            if(pop[i]->ShouldIMove()){
+            pop[i]->Process();
+            /*if(pop[i]->ShouldIMove()){
                 MoveOrganism(i);
-            }
-
+            }*/
         }
 
         emp::vector<size_t> movementSchedule =
@@ -49,7 +41,11 @@ class OrgWorld : public emp::World<Organism> {
                 continue;
             }
             if (pop[i]->ShouldIMove()) {
+                std::cout << "I should move! Running MoveOrg" << std::endl;
                 MoveOrganism(i);
+            }
+            else{
+                std::cout << "I should not move" << std::endl;
             }
         }
 
@@ -61,7 +57,31 @@ class OrgWorld : public emp::World<Organism> {
             }
             emp::Ptr<Organism> offspring = pop[i]->CheckReproduction();
             if (offspring) {
-                DoBirth(*offspring, i);
+                // DoBirth(*offspring, i);
+                std::cout << "Offspring is truthy! Finding a place to put offspring..." << std::endl;
+                emp::WorldPosition possibleOffspringLocation =
+                    GetRandomNeighborPos(i);
+                if (IsOccupied(possibleOffspringLocation/*.GetIndex()*/)) {
+                    std::cout << "First random offspring spot was occupied, looping to try and find others." << std::endl;
+                    for (int h = 0;
+                         h < 10 &&
+                         IsOccupied(possibleOffspringLocation/*.GetIndex()*/);
+                         h++) {
+                        possibleOffspringLocation = GetRandomNeighborPos(i);
+                    }
+                }
+                if(!IsOccupied(possibleOffspringLocation/*.GetIndex()*/)){
+                    std::cout << "Open spot! Adding org (reproduction)" << std::endl;
+                    AddOrgAt(offspring, possibleOffspringLocation);
+                } else {
+                    std::cout << "No room for offspring" << std::endl;
+                }
+                /*
+                //while (IsOccupied(possibleOffspringLocation.GetIndex())) {
+                    //possibleOffspringLocation = GetRandomNeighborPos(i);
+                }
+                */
+                //AddOrgAt(offspring, possibleOffspringLocation);
             }
         }
 

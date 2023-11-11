@@ -12,10 +12,22 @@ class Hare : public Organism {
 
     bool ShouldIMove() override {
         double rand = random->GetDouble();
-        return rand > 0.2;
+        return rand > 0.3;
     }
 
     std::string GetColor() override {
         return "blue";
+    }
+    virtual emp::Ptr<Organism> CheckReproduction() override {
+        std::cout << "Checking reproduction (hare)" << std::endl;
+        if (points > 100) {
+            std::cout << "Reproducing (Hare)" << std::endl;
+            emp::Ptr<Hare> offspring = new Hare(*this);
+            offspring->SetPoints(0);
+            points = 0;
+            return offspring;
+        }
+        std::cout << "i'm a hare that can't reproduce" << std::endl;
+        return nullptr;
     }
 };

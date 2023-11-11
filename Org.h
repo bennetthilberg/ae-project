@@ -7,12 +7,13 @@
 
 class Organism {
   private:
-    double points;
+    
     
 
   protected:
     std::string species;
     emp::Ptr<emp::Random> random;
+    double points;
 
   public:
     Organism(emp::Ptr<emp::Random> _random, double _points = 0.0)
@@ -21,6 +22,7 @@ class Organism {
     }
     virtual ~Organism() {
     }
+
     void SetPoints(double _in) {
         points = _in;
     }
@@ -34,7 +36,8 @@ class Organism {
         return "black";
     }
     virtual void Process(/*bool doIHaveCompany*/) {
-        std::cout << "Processing" << std::endl;
+        std::cout << "Default processing" << std::endl;
+        points+=3;
         //if (!doIHaveCompany) {
         //    points += 50;
         //}
@@ -51,14 +54,14 @@ class Organism {
         }
     }
     virtual emp::Ptr<Organism> CheckReproduction() {
-        std::cout << "Checking reproduction" << std::endl;
-        if (points > 1000) {
+        std::cout << "Checking reproduction (org.h, not species)" << std::endl;
+        /*if (points > 100) {
             std::cout << "Reproducing" << std::endl;
             emp::Ptr<Organism> offspring = new Organism(*this);
             offspring->SetPoints(0);
             points = 0;
             return offspring;
-        }
+        }*/
         return nullptr;
     }
 };
